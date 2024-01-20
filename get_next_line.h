@@ -3,17 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: avelikan <avelikan@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*   By: avelikan <avelikan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 11:27:24 by avelikan          #+#    #+#             */
-/*   Updated: 2024/01/19 11:27:27 by avelikan         ###   ########.fr       */
+/*   Updated: 2024/01/20 16:14:44 by avelikan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
 
-#define BUFFER_SIZE 42 //temporarily!
+# define BUFFER_SIZE 42 //temporarily!
 
 # include <stdlib.h>
 # include <unistd.h>

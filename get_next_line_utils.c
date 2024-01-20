@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: avelikan <avelikan@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*   By: avelikan <avelikan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 11:26:59 by avelikan          #+#    #+#             */
-/*   Updated: 2024/01/19 11:27:03 by avelikan         ###   ########.fr       */
+/*   Updated: 2024/01/20 18:26:05 by avelikan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,25 +60,36 @@ char	*ft_strdup(const char *s1)
 	return (s1_dup);
 }
 
-char	*ft_strjoin(char const *s1, char const *s2)
+char	*ft_strjoin(char const *s1, char const *s2)//verify again
 {
 	size_t	l1;
 	size_t	l2;
 	char	*s3;
+	int		i;
 
 	if (!s1 || !s2)
 		return (NULL);
 	l1 = ft_strlen(s1);
 	l2 = ft_strlen(s2);
+	i = 0;
 	s3 = (char *) malloc((l1 + l2 + 1) * sizeof(char));
 	if (!s3)
 		return (NULL);
-	ft_strlcpy(s3, s1, l1 + l2 + 1);
-	ft_strlcat(s3, s2, l1 + l2 + 1);
+	while (s1[i] != '\0')
+	{
+		s3[i] = s1[i];
+		i++;
+	}
+	while (s2[i - l1] != '\0')
+	{
+		s3[i] = s2[i - l1];
+		i++;
+	}
+	s3[i] = '\0';
 	return (s3);
 }
 
-char	*ft_substr(char const *s, unsigned int start, size_t len)
+char	*ft_sstr(char const *s, size_t len)
 {
 	char	*s_sub;
 	size_t	s_len;

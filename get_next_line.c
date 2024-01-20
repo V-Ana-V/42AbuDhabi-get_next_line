@@ -3,21 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: avelikan <avelikan@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*   By: avelikan <avelikan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 13:40:41 by avelikan          #+#    #+#             */
-/*   Updated: 2024/01/18 13:40:45 by avelikan         ###   ########.fr       */
+/*   Updated: 2024/01/20 18:25:47 by avelikan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-//Here we add to the buffer additional part that contains new line. Pay attention that we did not free the tail here.
-//Check for malloc protections!!!
 char	*buf_append(char *buffer, char *tail)
 {
 	char	*append_tail;
-	
+
 	if (!buffer)
 	{
 		buffer = malloc(1);
@@ -27,7 +25,7 @@ char	*buf_append(char *buffer, char *tail)
 	}
 	append_tail = ft_strjoin(buffer, tail);
 	free(buffer);
-	return(append_tail);
+	return (append_tail);
 }
 
 char	*buf_update(char *buffer)
@@ -45,13 +43,15 @@ char	*buf_extract(char *buffer)
 	int		l;
 
 	l = 0;
-	while (buffer[l] != '\n')
+	while (buffer[l] != '\n' && buffer[l] != '\0')
 		l++;
-	line = ft_substr(buffer, 0, l + 1);
+	if (l == 0)
+		return (NULL);
+	line = ft_sstr(buffer, l + 1);
 	return (line);
 }
 
-char	read_line(int fd, char *buffer)
+char	*read_line(int fd, char *buffer)
 {
 	ssize_t	mem_read;
 	char	*buf_read;
@@ -79,5 +79,15 @@ char	read_line(int fd, char *buffer)
 
 char	*get_next_line(int fd)
 {
+	static char	*buffer;
+	char		*line;
 
+	if (fd < 0 || BUFFER_SIZE <= 0)
+		return (NULL);
+	buffer = read_line(fd, buffer);
+	if (!buffer)
+		return (NULL);
+	line = buf_extract(buffer);
+	buffer = buf_update(buffer);
+	return (line);
 }
