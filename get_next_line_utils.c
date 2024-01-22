@@ -107,29 +107,3 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	s3[i] = '\0';
 	return (s3);
 }
-
-// char	*ft_sstr(char const *s, size_t len)
-// {
-// 	char	*s_sub;
-// 	size_t	s_len;
-// 	size_t	tail;
-// 	size_t	i;
-
-// 	if (!s)
-// 		return (NULL);
-// 	s_len = ft_strlen(s);
-// 	tail = s_len;
-// 	if (s_len > len)
-// 		tail = len;
-// 	s_sub = (char *) malloc((tail + 1) * sizeof(char));
-// 	if (!s_sub)
-// 		return (NULL);
-// 	i = 0;
-// 	while (i < tail)
-// 	{
-// 		s_sub[i] = s[i];
-// 		i++;
-// 	}
-// 	s_sub[i] = '\0';
-// 	return (s_sub);
-// }

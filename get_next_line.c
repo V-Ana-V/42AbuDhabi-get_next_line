@@ -19,9 +19,9 @@ char	*buf_append(char *buffer, char *tail)
 	if (!buffer)
 	{
 		buffer = malloc(1);
-		buffer[0] = '\0';
 		if (!buffer)
 			return (NULL);
+		buffer[0] = '\0';
 	}
 	append_tail = ft_strjoin(buffer, tail);
 	free(buffer);
@@ -35,30 +35,14 @@ char	*buf_update(char *buffer)
 
 	endl = ft_strchr(buffer, '\n');
 	if (endl == NULL)
+	{
+		free(buffer);
 		return (NULL);
+	}
 	tail = ft_strdup(endl + 1);
 	free(buffer);
 	return (tail);
 }
-
-// char	*buf_extract(char *buffer)
-// {
-// 	char	*line;
-// 	int		l;
-
-// 	l = 0;
-// 	while (buffer[l] != '\n' && buffer[l] != '\0')
-// 		l++;
-// 	if (l == 0 && buffer[0] != '\0')
-// 	{
-// 		line = ft_strdup(buffer);
-// 		return (line);
-// 	}
-// 	else if (l == 0)
-// 		return (NULL);
-// 	line = ft_sstr(buffer, l + 1);
-// 	return (line);
-// }
 
 char	*buf_extract(char *buffer)
 {
@@ -73,11 +57,11 @@ char	*buf_extract(char *buffer)
 		return (NULL);
 	else if (nl == NULL && buffer != endstr)
 		return (ft_strdup(buffer));
-	line = malloc(nl - buffer + 1);
+	line = malloc(nl - buffer + 2);
 	if (!line)
 		return (NULL);
 	i = 0;
-	while (i < (size_t)(nl - buffer) + 1)
+	while (i < ((size_t)(nl - buffer) + 1))
 	{
 		line[i] = buffer[i];
 		i++;
