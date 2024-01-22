@@ -19,9 +19,9 @@ char	*buf_append(char *buffer, char *tail)
 	if (!buffer)
 	{
 		buffer = malloc(1);
+		buffer[0] = '\0';
 		if (!buffer)
 			return (NULL);
-		*buffer = '\0';
 	}
 	append_tail = ft_strjoin(buffer, tail);
 	free(buffer);
@@ -31,23 +31,58 @@ char	*buf_append(char *buffer, char *tail)
 char	*buf_update(char *buffer)
 {
 	char	*tail;
+	char	*endl;
 
-	tail = ft_strdup(ft_strchr(buffer, '\n') + 1);
+	endl = ft_strchr(buffer, '\n');
+	if (endl == NULL)
+		return (NULL);
+	tail = ft_strdup(endl + 1);
 	free(buffer);
 	return (tail);
 }
 
+// char	*buf_extract(char *buffer)
+// {
+// 	char	*line;
+// 	int		l;
+
+// 	l = 0;
+// 	while (buffer[l] != '\n' && buffer[l] != '\0')
+// 		l++;
+// 	if (l == 0 && buffer[0] != '\0')
+// 	{
+// 		line = ft_strdup(buffer);
+// 		return (line);
+// 	}
+// 	else if (l == 0)
+// 		return (NULL);
+// 	line = ft_sstr(buffer, l + 1);
+// 	return (line);
+// }
+
 char	*buf_extract(char *buffer)
 {
+	char	*nl;
+	char	*endstr;
 	char	*line;
-	int		l;
+	size_t	i;
 
-	l = 0;
-	while (buffer[l] != '\n' && buffer[l] != '\0')
-		l++;
-	if (l == 0)
+	nl = ft_strchr(buffer, '\n');
+	endstr = ft_strchr(buffer, '\0');
+	if (buffer == endstr)
 		return (NULL);
-	line = ft_sstr(buffer, l + 1);
+	else if (nl == NULL && buffer != endstr)
+		return (ft_strdup(buffer));
+	line = malloc(nl - buffer + 1);
+	if (!line)
+		return (NULL);
+	i = 0;
+	while (i < (size_t)(nl - buffer) + 1)
+	{
+		line[i] = buffer[i];
+		i++;
+	}
+	line[i] = '\0';
 	return (line);
 }
 
@@ -56,10 +91,10 @@ char	*read_line(int fd, char *buffer)
 	ssize_t	mem_read;
 	char	*buf_read;
 
-	mem_read = 1;
-	buf_read = malloc(BUFFER_SIZE + 1);
+	buf_read = calloc(BUFFER_SIZE + 1, 1);
 	if (!buf_read)
 		return (NULL);
+	mem_read = 1;
 	while (mem_read > 0)
 	{
 		mem_read = read(fd, buf_read, BUFFER_SIZE);
@@ -68,7 +103,6 @@ char	*read_line(int fd, char *buffer)
 			free(buf_read);
 			return (NULL);
 		}
-		buf_read[mem_read] = '\0';
 		buffer = buf_append(buffer, buf_read);
 		if (ft_strchr(buf_read, '\n') != NULL)
 			break ;
@@ -82,8 +116,12 @@ char	*get_next_line(int fd)
 	static char	*buffer;
 	char		*line;
 
-	if (fd < 0 || BUFFER_SIZE <= 0)
+	if (fd < 0 || BUFFER_SIZE <= 0 || BUFFER_SIZE > ((ssize_t)(SIZE_MAX / 2)))
+	{
+		free(buffer);
+		buffer = NULL;
 		return (NULL);
+	}
 	buffer = read_line(fd, buffer);
 	if (!buffer)
 		return (NULL);
@@ -91,3 +129,5 @@ char	*get_next_line(int fd)
 	buffer = buf_update(buffer);
 	return (line);
 }
+
+//compile: cc -Wall -Wextra -Werror -D BUFFER_SIZE=42 <files>.c
