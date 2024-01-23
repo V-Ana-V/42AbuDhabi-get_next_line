@@ -6,11 +6,12 @@
 /*   By: avelikan <avelikan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/18 13:40:41 by avelikan          #+#    #+#             */
-/*   Updated: 2024/01/20 18:25:47 by avelikan         ###   ########.fr       */
+/*   Updated: 2024/01/23 12:09:24 by avelikan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+#include <stdio.h> //debug
 
 char	*buf_append(char *buffer, char *tail)
 {
@@ -57,7 +58,7 @@ char	*buf_extract(char *buffer)
 		return (NULL);
 	else if (nl == NULL && buffer != endstr)
 		return (ft_strdup(buffer));
-	line = malloc(nl - buffer + 2);
+	line = malloc((size_t)(nl - buffer) + 2);
 	if (!line)
 		return (NULL);
 	i = 0;
@@ -75,16 +76,18 @@ char	*read_line(int fd, char *buffer)
 	ssize_t	mem_read;
 	char	*buf_read;
 
-	buf_read = calloc(BUFFER_SIZE + 1, 1);
+	buf_read = malloc(BUFFER_SIZE + 1);
 	if (!buf_read)
 		return (NULL);
 	mem_read = 1;
 	while (mem_read > 0)
 	{
+		ft_bzero(buf_read, BUFFER_SIZE + 1);
 		mem_read = read(fd, buf_read, BUFFER_SIZE);
 		if (mem_read == -1)
 		{
 			free(buf_read);
+			free(buffer);
 			return (NULL);
 		}
 		buffer = buf_append(buffer, buf_read);

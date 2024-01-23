@@ -6,7 +6,7 @@
 /*   By: avelikan <avelikan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 11:27:24 by avelikan          #+#    #+#             */
-/*   Updated: 2024/01/20 16:14:44 by avelikan         ###   ########.fr       */
+/*   Updated: 2024/01/23 11:25:08 by avelikan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,10 @@
 # endif
 
 size_t	ft_strlen(const char *s);
-void	*ft_calloc(size_t count, size_t size);
+void	ft_bzero(void *s, size_t n);
 char	*ft_strdup(const char *s1);
 char	*ft_strjoin(char const *s1, char const *s2);
 char	*ft_strchr(const char *s, int c);
-char	*ft_sstr(char const *s, size_t len);
 char	*get_next_line(int fd);
 
 #endif

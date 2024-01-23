@@ -6,7 +6,7 @@
 /*   By: avelikan <avelikan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/19 11:26:59 by avelikan          #+#    #+#             */
-/*   Updated: 2024/01/20 18:26:05 by avelikan         ###   ########.fr       */
+/*   Updated: 2024/01/23 11:25:47 by avelikan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,23 +22,18 @@ size_t	ft_strlen(const char *s)
 	return (l);
 }
 
-void	*ft_calloc(size_t count, size_t size)
+void	ft_bzero(void *s, size_t n)
 {
-	void	*ptr;
-	size_t	i;
+	size_t			i;
+	unsigned char	*ptr;
 
-	if ((size > 0) && (count > 0) && (count > (SIZE_MAX / size)))
-		return (NULL);
-	ptr = malloc(count * size);
-	if (!ptr)
-		return (NULL);
 	i = 0;
-	while (i < count * size)
+	ptr = (unsigned char *) s;
+	while (i < n)
 	{
-		((unsigned char *) ptr)[i] = 0;
+		ptr[i] = 0;
 		i++;
 	}
-	return (ptr);
 }
 
 char	*ft_strchr(const char *s, int c)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: avelikan <avelikan@student.42abudhabi.ae>  +#+  +:+       +#+        */
+/*   By: avelikan <avelikan@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/22 09:41:38 by avelikan          #+#    #+#             */
-/*   Updated: 2024/01/22 09:41:43 by avelikan         ###   ########.fr       */
+/*   Updated: 2024/01/23 11:56:07 by avelikan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,15 @@ int	main(int ac, char **av)
 		return (0);
 	fd = open(*(av + 1), O_RDONLY);
 	line = get_next_line(fd);
+	printf("%s", line);
 	while (line != NULL)
 	{
-		printf("%s", line);
 		free(line);
 		line = get_next_line(fd);
+		if (!line)
+			break ;
+		else
+			printf("%s", line);
 	}
 	get_next_line(-1);
 	close(fd);
