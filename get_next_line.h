@@ -23,11 +23,16 @@
 
 # endif
 
-size_t	ft_strlen(const char *s);
-void	ft_bzero(void *s, size_t n);
-char	*ft_strdup(const char *s1);
-char	*ft_strjoin(char const *s1, char const *s2);
-char	*ft_strchr(const char *s, int c);
+typedef struct struct_buffer
+{
+	char	*buf;
+	size_t	len;
+}	t_buffer;
+
+size_t	ft_strchr(const char *buffer, char c, size_t len);
+void	set_buffer(t_buffer *buffer, char *buf_buf, size_t buf_len);
+void	buf_append(t_buffer *buffer, char *buf_read, ssize_t mem_read);
+int		buf_expand(ssize_t mem_read, char *buf_read, t_buffer *buffer);
 char	*get_next_line(int fd);
 
 #endif

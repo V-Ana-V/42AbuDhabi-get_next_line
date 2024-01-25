@@ -11,110 +11,135 @@
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include <stdio.h> //debug
 
-char	*buf_append(char *buffer, char *tail)
+void	buf_append(t_buffer *buffer, char *buf_read, ssize_t mem_read)
 {
-	char	*append_tail;
+	ssize_t	i;
+	char	*new_buf;
 
-	if (!buffer)
+	i = 0;
+	new_buf = malloc(buffer->len + mem_read);
+	if (!new_buf)
 	{
-		buffer = malloc(1);
-		if (!buffer)
-			return (NULL);
-		buffer[0] = '\0';
+		set_buffer(buffer, NULL, 0);
+		return ;
 	}
-	append_tail = ft_strjoin(buffer, tail);
-	free(buffer);
-	return (append_tail);
+	while ((size_t)i < (buffer->len))
+	{
+		new_buf[i] = (buffer->buf)[i];
+		i++;
+	}
+	while ((size_t)i < mem_read + (buffer->len))
+	{
+		new_buf[i] = buf_read[i - (buffer->len)];
+		i++;
+	}
+	set_buffer(buffer, new_buf, mem_read + buffer->len);
 }
 
-char	*buf_update(char *buffer)
+int	buf_update(t_buffer *buffer)
 {
-	char	*tail;
-	char	*endl;
-
-	endl = ft_strchr(buffer, '\n');
-	if (endl == NULL)
-	{
-		free(buffer);
-		return (NULL);
-	}
-	tail = ft_strdup(endl + 1);
-	free(buffer);
-	return (tail);
-}
-
-char	*buf_extract(char *buffer)
-{
-	char	*nl;
-	char	*endstr;
-	char	*line;
+	size_t	nl;
+	char	*new_buffer;
 	size_t	i;
 
-	nl = ft_strchr(buffer, '\n');
-	endstr = ft_strchr(buffer, '\0');
-	if (buffer == endstr)
-		return (NULL);
-	else if (nl == NULL && buffer != endstr)
-		return (ft_strdup(buffer));
-	line = malloc((size_t)(nl - buffer) + 2);
+	nl = ft_strchr(buffer->buf, '\n', buffer->len);
+	if (nl == 0 || buffer->len == nl)
+	{
+		set_buffer(buffer, NULL, 0);
+		return (0);
+	}
+	new_buffer = malloc(buffer->len - nl);
+	if (!new_buffer)
+	{
+		set_buffer(buffer, NULL, 0);
+		return (1);
+	}
+	i = 0;
+	while (i < (buffer->len - nl))
+	{
+		new_buffer[i] = buffer->buf[nl + i];
+		i++;
+	}
+	set_buffer(buffer, new_buffer, i);
+	return (0);
+}
+
+char	*buf_extract(t_buffer buffer)
+{
+	size_t	nl;
+	char	*line;
+	size_t	i;
+	size_t	x;
+
+	nl = ft_strchr(buffer.buf, '\n', buffer.len);
+	if (nl == 0)
+		x = buffer.len + 1;
+	else
+		x = nl + 1;
+	line = malloc(x);
 	if (!line)
 		return (NULL);
 	i = 0;
-	while (i < ((size_t)(nl - buffer) + 1))
+	while (i < (x - 1))
 	{
-		line[i] = buffer[i];
+		line[i] = buffer.buf[i];
 		i++;
 	}
 	line[i] = '\0';
 	return (line);
 }
 
-char	*read_line(int fd, char *buffer)
+void	read_line(int fd, t_buffer *buffer)
 {
 	ssize_t	mem_read;
 	char	*buf_read;
+	int		x;
 
-	buf_read = malloc(BUFFER_SIZE + 1);
-	if (!buf_read)
-		return (NULL);
 	mem_read = 1;
+	buf_read = malloc(BUFFER_SIZE);
+	if (!buf_read)
+	{
+		set_buffer(buffer, NULL, 0);
+		return ;
+	}
 	while (mem_read > 0)
 	{
-		ft_bzero(buf_read, BUFFER_SIZE + 1);
 		mem_read = read(fd, buf_read, BUFFER_SIZE);
-		if (mem_read == -1)
-		{
-			free(buf_read);
-			free(buffer);
-			return (NULL);
-		}
-		buffer = buf_append(buffer, buf_read);
-		if (ft_strchr(buf_read, '\n') != NULL)
+		x = buf_expand(mem_read, buf_read, buffer);
+		if (x == 0)
+			return ;
+		if (ft_strchr(buf_read, '\n', mem_read) != 0)
 			break ;
 	}
 	free(buf_read);
-	return (buffer);
 }
 
 char	*get_next_line(int fd)
 {
-	static char	*buffer;
-	char		*line;
+	static t_buffer	buffer;
+	char			*line;
+	int				update_fail;
 
-	if (fd < 0 || BUFFER_SIZE <= 0 || BUFFER_SIZE > ((ssize_t)(SIZE_MAX / 2)))
-	{
-		free(buffer);
-		buffer = NULL;
+	if (fd < 0 || BUFFER_SIZE <= 0
+		|| BUFFER_SIZE > ((ssize_t)(SIZE_MAX / 2)))
 		return (NULL);
-	}
-	buffer = read_line(fd, buffer);
-	if (!buffer)
+	read_line(fd, &buffer);
+	if (buffer.buf == NULL)
 		return (NULL);
 	line = buf_extract(buffer);
-	buffer = buf_update(buffer);
+	if (!line)
+	{
+		free(buffer.buf);
+		buffer.buf = NULL;
+		buffer.len = 0;
+		return (NULL);
+	}
+	update_fail = buf_update(&buffer);
+	if (update_fail == 1)
+	{
+		free(line);
+		line = NULL;
+	}
 	return (line);
 }
-
-//compile: cc -Wall -Wextra -Werror -D BUFFER_SIZE=42 <files>.c

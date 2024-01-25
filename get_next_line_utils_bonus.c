@@ -12,93 +12,41 @@
 
 #include "get_next_line.h"
 
-size_t	ft_strlen(const char *s)
+size_t	ft_strchr(const char *buffer, char c, size_t len)
 {
-	size_t	l;
-
-	l = 0;
-	while (s[l])
-		l++;
-	return (l);
-}
-
-void	ft_bzero(void *s, size_t n)
-{
-	size_t			i;
-	unsigned char	*ptr;
+	size_t	i;
 
 	i = 0;
-	ptr = (unsigned char *) s;
-	while (i < n)
+	while (i < len)
 	{
-		ptr[i] = 0;
+		if (*(buffer + i) == c)
+			return (i + 1);
 		i++;
 	}
+	return (0);
 }
 
-char	*ft_strchr(const char *s, int c)
+void	set_buffer(t_buffer *buffer, char *buf_buf, size_t buf_len)
 {
-	char	ch;
-
-	ch = (unsigned char) c;
-	if (ch == '\0')
-	{
-		return ((char *)(s + ft_strlen(s)));
-	}
-	while (*s)
-	{
-		if (ch == *s)
-			return ((char *) s);
-		s++;
-	}
-	return (NULL);
+	free(buffer->buf);
+	buffer->buf = buf_buf;
+	buffer->len = buf_len;
 }
 
-char	*ft_strdup(const char *s1)
+int	buf_expand(ssize_t mem_read, char *buf_read, t_buffer *buffer)
 {
-	int		l;
-	int		i;
-	char	*s1_dup;
-
-	i = 0;
-	l = ft_strlen(s1);
-	s1_dup = (char *) malloc(l + 1);
-	if (s1_dup == 0)
-		return (NULL);
-	while (i < l)
+	if (mem_read == -1
+		|| ((mem_read == 0) && (buffer->buf == NULL) && (buffer->len == 0)))
 	{
-		s1_dup[i] = s1[i];
-		i++;
+		free(buf_read);
+		set_buffer(buffer, NULL, 0);
+		return (0);
 	}
-	s1_dup[i] = '\0';
-	return (s1_dup);
-}
-
-char	*ft_strjoin(char const *s1, char const *s2)
-{
-	size_t	l1;
-	size_t	l2;
-	char	*s3;
-	int		i;
-
-	if (!s1 || !s2)
-		return (NULL);
-	l1 = ft_strlen(s1);
-	l2 = ft_strlen(s2);
-	i = 0;
-	s3 = malloc(l1 + l2 + 1);
-	if (!s3)
-		return (NULL);
-	while (s1[i] != '\0')
+	buf_append(buffer, buf_read, mem_read);
+	if (!(buffer->buf))
 	{
-		s3[i] = s1[i];
-		i++;
+		free(buf_read);
+		return (0);
 	}
-	while (s2[i - l1] != '\0')
-	{
-		s3[i] = s2[i - l1];
-		i++;
-	}
-	s3[i] = '\0';
-	return (s3);
+	return (1);
 }

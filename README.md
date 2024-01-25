@@ -16,7 +16,3 @@ The read function will read up to BUFFER_SIZE bytes or until EOF. For shorter li
 
 ### 5. Multiple Calls to get_next_line on the Same File Descriptor:
 The static variable buffer maintains the state between calls, allowing for successive lines to be read with multiple calls. This should handle sequential line reads correctly.
-
-####The tests:
-1) Francinette: https://github.com/xicodomingues/francinette
-2) Tripoiulle: https://github.com/Tripouille/gnlTester
