@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 void	buf_append(t_buffer *buffer, char *buf_read, ssize_t mem_read)
 {
@@ -117,25 +117,25 @@ void	read_line(int fd, t_buffer *buffer)
 
 char	*get_next_line(int fd)
 {
-	static t_buffer	buffer;
+	static t_buffer	buffer[OPEN_MAX];
 	char			*line;
 	int				update_fail;
 
 	if (fd < 0 || BUFFER_SIZE <= 0
 		|| BUFFER_SIZE > ((ssize_t)(SIZE_MAX / 2)))
 		return (NULL);
-	read_line(fd, &buffer);
-	if (buffer.buf == NULL)
+	read_line(fd, &(buffer[fd]));
+	if (buffer[fd].buf == NULL)
 		return (NULL);
-	line = buf_extract(buffer);
+	line = buf_extract(buffer[fd]);
 	if (!line)
 	{
-		free(buffer.buf);
-		buffer.buf = NULL;
-		buffer.len = 0;
+		free(buffer[fd].buf);
+		buffer[fd].buf = NULL;
+		buffer[fd].len = 0;
 		return (NULL);
 	}
-	update_fail = buf_update(&buffer);
+	update_fail = buf_update(&(buffer[fd]));
 	if (update_fail == 1)
 	{
 		free(line);
