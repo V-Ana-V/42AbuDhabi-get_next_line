@@ -14,8 +14,9 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
+//This main is for checking bonus part:
 int	main(int ac, char **av)
 {
 	int		fd1;
@@ -27,6 +28,7 @@ int	main(int ac, char **av)
 	fd1 = open(*(av + 1), O_RDONLY);
 	fd2 = open(*(av + 2), O_RDONLY);
 	line = "asdjo";
+	//The shortest file should be first among arguments!
 	while (line != NULL)
 	{
 		line = get_next_line(fd1);
