@@ -18,27 +18,27 @@
 
 int	main(int ac, char **av)
 {
-	int		fd;
+	int		fd1;
+	int		fd2;
 	char	*line;
 
-	if (ac != 2)
+	if (ac != 3)
 		return (0);
-	if ((av[1][0] == '1' && av[1][1] == '\0')
-		|| (av[1][0] == '0' && av[1][1] == '\0'))
-		fd = 1;
-	else
-		fd = open(*(av + 1), O_RDONLY);
-	line = get_next_line(fd);
-	printf("%s", line);
+	fd1 = open(*(av + 1), O_RDONLY);
+	fd2 = open(*(av + 2), O_RDONLY);
+	line = "asdjo";
 	while (line != NULL)
 	{
+		line = get_next_line(fd1);
+		printf("line[1] %s", line);
 		free(line);
-		line = get_next_line(fd);
-		if (!line)
-			break ;
-		else
-			printf("%s", line);
+		line = get_next_line(fd2);
+		printf("line[2] %s", line);
+		free(line);
 	}
-	close(fd);
+	if (line)
+		free(line);
+	close(fd1);
+	close(fd2);
 	return (0);
 }
