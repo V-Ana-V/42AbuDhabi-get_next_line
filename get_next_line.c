@@ -122,7 +122,7 @@ char	*get_next_line(int fd)
 	int				update_fail;
 
 	if (fd < 0 || BUFFER_SIZE <= 0
-		|| BUFFER_SIZE > ((ssize_t)(SIZE_MAX / 2)))
+		|| BUFFER_SIZE > INT_MAX)
 		return (NULL);
 	read_line(fd, &buffer);
 	if (buffer.buf == NULL)
